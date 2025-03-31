@@ -1,0 +1,69 @@
+CREATE DATABASE IF NOT EXISTS dados_saude;
+USE dados_saude;
+
+CREATE TABLE IF NOT EXISTS dados_2024 (
+    REG_ANS INT,
+    descricao VARCHAR(255),
+    VL_SALDO_INICIAL DECIMAL(15,2),
+    VL_SALDO_FINAL DECIMAL(15,2),
+    Razao_Social VARCHAR(255),
+    trimestre VARCHAR(10)  
+);
+
+LOAD DATA INFILE 'D:\VS-Code\IntuitiveCare\Teste3\Relatorio_cadop.csv'
+INTO TABLE relatorio_cadop
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+LOAD DATA INFILE 'D:\VS-Code\IntuitiveCare\Teste3\1T2024.csv'
+INTO TABLE dados_2024
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+SET trimestre = '1T2024';
+
+LOAD DATA INFILE 'D:\VS-Code\IntuitiveCare\Teste3\2T2024.csv'
+INTO TABLE dados_2024
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+SET trimestre = '2T2024';
+
+LOAD DATA INFILE 'D:\VS-Code\IntuitiveCare\Teste3\3T2024.csv'
+INTO TABLE dados_2024
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+SET trimestre = '3T2024';
+
+LOAD DATA INFILE 'D:\VS-Code\IntuitiveCare\Teste3\4T2024.csv'
+INTO TABLE dados_2024
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+SET trimestre = '4T2024';
+
+SELECT 
+    (d.VL_SALDO_FINAL - d.VL_SALDO_INICIAL) AS diferenca, 
+    rc.Razao_Social AS operadora
+FROM dados_2024 d
+INNER JOIN relatorio_cadop rc ON rc.Registro_ANS = d.REG_ANS
+WHERE d.descricao = 'EVENTOS/ SINISTROS CONHECIDOS OU AVISADOS DE ASSISTÊNCIA A SAÚDE MEDICO HOSPITALAR'
+AND d.trimestre = '4T2024'
+ORDER BY diferenca DESC
+LIMIT 10;
+
+SELECT 
+    (d.VL_SALDO_FINAL - d.VL_SALDO_INICIAL) AS diferenca, 
+    rc.Razao_Social AS operadora
+FROM dados_2024 d  
+INNER JOIN relatorio_cadop rc ON rc.Registro_ANS = d.REG_ANS
+WHERE d.descricao = 'EVENTOS/ SINISTROS CONHECIDOS OU AVISADOS DE ASSISTÊNCIA A SAÚDE MEDICO HOSPITALAR'
+ORDER BY diferenca DESC
+LIMIT 10;
